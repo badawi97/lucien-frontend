@@ -1,0 +1,15 @@
+<div class="d-flex"
+     id="wrapper">
+    <!-- Sidebar -->
+    <div class=""
+         [ngClass]="{ 'wp-5': isSidebarCollapsed }"
+         id="sidebar-wrapper">
+        <app-sidebar (isSidebarCollapsedChange)="toggleSidebar($event)"></app-sidebar>
+    </div>
+
+    <!-- Page content -->
+    <div id="page-content-wrapper"
+         class="w-100">
+        <app-page-content></app-page-content>
+    </div>
+</div>

@@ -1,0 +1,16 @@
+#wrapper {
+    min-height: 100dvh;
+}
+
+#sidebar-wrapper {
+    transition: width 0.3s ease;
+    width: 17%;
+}
+
+#page-content-wrapper {
+    flex: 1;
+}
+
+.wp-5 {
+    width: 5% !important;
+}
