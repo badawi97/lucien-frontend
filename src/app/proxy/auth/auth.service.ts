@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { LoginDto } from './models';
 import { TokenDto } from '../token/models';
 import { Response } from '../common/api/models';
+import { RegisterDto } from './register.model';
+import { RegisterResponse } from './register-response.model';
 
 @Injectable({
     providedIn: 'root',
@@ -15,6 +17,10 @@ export class AuthService {
 
     login(credentials: LoginDto): Observable<Response<TokenDto>> {
         return this.http.post<Response<TokenDto>>(`${this.apiUrl}/login`, credentials);
+    }
+
+    register(RegisterDto: RegisterDto): Observable<Response<RegisterResponse>> {
+        return this.http.post<Response<RegisterResponse>>(`${this.apiUrl}/register`, RegisterDto);
     }
 
     logout() {
