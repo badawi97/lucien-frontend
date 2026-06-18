@@ -1,24 +1,22 @@
 import { inject } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 import { Observable, catchError, switchMap, throwError } from 'rxjs';
+import { API_BASE_URL } from '../../proxy/api-url';
 
-const apiUrl = 'https://localhost:7086/api/Auth';
+const authApiUrl = `${API_BASE_URL}/Auth`;
 
 export const AuthInterceptor: HttpInterceptorFn = (
-    req: HttpRequest<any>,
+    req: HttpRequest<unknown>,
     next: HttpHandlerFn
-): Observable<any> => {
+): Observable<HttpEvent<unknown>> => {
     const http = inject(HttpClient);
     const modifiedReq = req.clone({ withCredentials: true });
 
     return next(modifiedReq).pipe(
         catchError((error: HttpErrorResponse) => {
-            debugger
             if (error.status === 401 && !req.url.endsWith('/refresh-token')) {
-                // Retry with refreshed token
-                return http.post(apiUrl + '/refresh-token', null, { withCredentials: true }).pipe(
+                return http.post(`${authApiUrl}/refresh-token`, null, { withCredentials: true }).pipe(
                     switchMap(() => {
-                        // Retry the original request after token refresh
                         return next(modifiedReq);
                     }),
                     catchError(err => {

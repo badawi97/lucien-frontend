@@ -6,8 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { AuthRoutesEnum } from '../../enums/auth-routes.enum';
-import { AuthService } from '../../../../proxy/auth/auth.service';
-import { LoginDto } from '../../../../proxy/auth/models';
+import { AuthService, LoginDto } from '../../../../proxy/auth';
 
 @Component({
   standalone: true,
@@ -45,7 +44,7 @@ export class LoginComponent {
       this.loading.set(true);
       this.error.set('');
 
-      let loginResponse = this.form.value as LoginDto
+      const loginResponse = this.form.value as LoginDto;
       this.authService.login(loginResponse).subscribe(response => {
         this.router.navigate([AuthRoutesEnum.dashboard]);
       });
