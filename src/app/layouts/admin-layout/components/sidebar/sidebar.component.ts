@@ -3,8 +3,8 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { MenuItem, MessageService } from 'primeng/api';
 import { PanelMenu } from 'primeng/panelmenu';
 import { RouterModule } from '@angular/router';
-import { IdentityManagementRoutesEnum } from '../../../../proxy/user/enums/identity-management-routes.enum';
-import { ModulesRoutesEnum } from '../../../../proxy/common/Modules/enums/modules-routes.enum';
+import { IdentityManagementRoutesEnum } from '../../../../shared/routing/enums/identity-management-routes.enum';
+import { ModulesRoutesEnum } from '../../../../shared/routing/enums/modules-routes.enum';
 
 @Component({
   selector: 'app-sidebar',
