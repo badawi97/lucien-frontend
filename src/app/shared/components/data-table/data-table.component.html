@@ -1,0 +1,82 @@
+<div class="data-table">
+  @if (globalFilter()) {
+  <div class="data-table__toolbar">
+    <span class="data-table__search">
+      <i class="pi pi-search" aria-hidden="true"></i>
+      <input pInputText type="search" [placeholder]="globalFilterPlaceholder()"
+        (input)="onGlobalFilter($event, table)" />
+    </span>
+  </div>
+  }
+
+  <p-table #table [value]="tableRows()" [columns]="tableColumns()" [dataKey]="dataKey()" [loading]="loading()"
+    [paginator]="paginator()" [rows]="rowsPerPage()" [rowsPerPageOptions]="pageSizeOptions()"
+    [globalFilterFields]="globalFilterFields()" [tableStyle]="{ 'min-width': '48rem' }" styleClass="p-datatable-sm"
+    responsiveLayout="scroll">
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        @for (column of columns; track column.field) {
+        @if (column.sortable) {
+        <th [pSortableColumn]="column.field" [style]="getColumnStyle(column)"
+          [class.data-table__cell--center]="column.align === 'center'"
+          [class.data-table__cell--right]="column.align === 'right'">
+          <span class="data-table__header-content">
+            {{ column.header }}
+            <p-sortIcon [field]="column.field"></p-sortIcon>
+          </span>
+        </th>
+        } @else {
+        <th [style]="getColumnStyle(column)" [class.data-table__cell--center]="column.align === 'center'"
+          [class.data-table__cell--right]="column.align === 'right'">
+          {{ column.header }}
+        </th>
+        }
+        }
+
+        @if (actions().length > 0) {
+        <th class="data-table__actions-header">Actions</th>
+        }
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr>
+        @for (column of columns; track column.field) {
+        <td [class.data-table__cell--center]="column.align === 'center'"
+          [class.data-table__cell--right]="column.align === 'right'">
+          @if (getCellTemplate(column.field); as cellTemplate) {
+          <ng-container [ngTemplateOutlet]="cellTemplate.templateRef" [ngTemplateOutletContext]="{
+                  $implicit: rowData,
+                  row: rowData,
+                  value: getCellValue(rowData, column),
+                  column: column
+                }"></ng-container>
+          } @else {
+          {{ getCellText(rowData, column) }}
+          }
+        </td>
+        }
+
+        @if (actions().length > 0) {
+        <td class="data-table__actions">
+          @for (action of actions(); track action.id) {
+          @if (isActionVisible(action, rowData)) {
+          <button pButton type="button" size="small" [icon]="getActionIcon(action)" [label]="action.label"
+            [severity]="action.severity" [outlined]="action.outlined ?? true"
+            [disabled]="isActionDisabled(action, rowData)" (click)="onActionClick(action, rowData)"></button>
+          }
+          }
+        </td>
+        }
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td [attr.colspan]="columns().length + (actions().length > 0 ? 1 : 0)">
+          <div class="data-table__empty">{{ emptyMessage() }}</div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

@@ -6,6 +6,11 @@ import Aura from '@primeng/themes/aura';
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { AuthInterceptor } from './shared/Interceptors/auth.interceptor';
+import { provideApi } from './proxy';
+
+/** Base URL for generated OpenAPI clients. Endpoint paths include `/api`. */
+export const API_ROOT_URL = 'https://localhost:7086';
+export const AUTH_API_URL = `${API_ROOT_URL}/api/Auth`;
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,6 +27,7 @@ export const appConfig: ApplicationConfig = {
     }),
     provideHttpClient(
       withInterceptors([AuthInterceptor])
-    )
+    ),
+    provideApi(API_ROOT_URL),
   ]
 };

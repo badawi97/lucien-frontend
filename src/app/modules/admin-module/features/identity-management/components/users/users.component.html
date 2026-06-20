@@ -1,1 +1,125 @@
-<p>users works!</p>
+<section class="users-page" aria-labelledby="users-title">
+  <div class="users-page__header">
+    <div>
+      <h1 id="users-title">Users</h1>
+      <p>Manage identity users and role assignments.</p>
+    </div>
+
+    <div class="users-page__actions">
+      <button pButton type="button" icon="pi pi-plus" label="Add User" (click)="openCreateDialog()"></button>
+      <button
+        pButton
+        type="button"
+        severity="secondary"
+        icon="pi pi-refresh"
+        label="Refresh"
+        [outlined]="true"
+        (click)="loadUsers()"
+        [disabled]="loading()"
+      ></button>
+    </div>
+  </div>
+
+  @if (errorMessage(); as message) {
+    <div class="users-page__alert" role="alert">
+      <strong>Users could not be loaded.</strong>
+      <span>{{ message }}</span>
+    </div>
+  }
+
+  <app-data-table
+    [columns]="columns"
+    [rows]="users()"
+    [actions]="actions"
+    [loading]="loading()"
+    dataKey="id"
+    emptyMessage="No users found."
+    globalFilterPlaceholder="Search users"
+    (actionClick)="onTableAction($event)"
+  ></app-data-table>
+
+  <p-dialog
+    [visible]="dialogVisible()"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [style]="{ width: 'min(42rem, 92vw)' }"
+    [header]="dialogTitle()"
+    (visibleChange)="dialogVisible.set($event)"
+  >
+    <form class="user-form" [formGroup]="form" (ngSubmit)="saveUser()">
+      @if (formErrorMessage(); as message) {
+        <div class="users-page__alert" role="alert">
+          <strong>User could not be saved.</strong>
+          <span>{{ message }}</span>
+        </div>
+      }
+
+      <div class="user-form__grid">
+        <label class="user-form__field">
+          <span>First Name</span>
+          <input pInputText type="text" formControlName="firstName" autocomplete="given-name" />
+        </label>
+
+        <label class="user-form__field">
+          <span>Last Name</span>
+          <input pInputText type="text" formControlName="lastName" autocomplete="family-name" />
+        </label>
+
+        <label class="user-form__field">
+          <span>Username</span>
+          <input pInputText type="text" formControlName="userName" autocomplete="username" />
+        </label>
+
+        <label class="user-form__field">
+          <span>Email</span>
+          <input pInputText type="email" formControlName="email" autocomplete="email" />
+        </label>
+
+        <label class="user-form__field">
+          <span>Phone</span>
+          <input pInputText type="tel" formControlName="phone" autocomplete="tel" />
+        </label>
+
+        <label class="user-form__field">
+          <span>Role</span>
+          <select formControlName="roleId">
+            <option value="">No role</option>
+            @for (role of roles(); track role.id) {
+              <option [value]="role.id">{{ role.name }}</option>
+            }
+          </select>
+        </label>
+
+        <label class="user-form__field user-form__field--full">
+          <span>Address</span>
+          <input pInputText type="text" formControlName="address" autocomplete="street-address" />
+        </label>
+
+        <label class="user-form__field user-form__field--full">
+          <span>Password</span>
+          <input
+            pInputText
+            type="password"
+            formControlName="password"
+            autocomplete="new-password"
+            [placeholder]="isEditMode() ? 'Leave blank to keep current password' : ''"
+          />
+        </label>
+      </div>
+
+      <div class="user-form__footer">
+        <button
+          pButton
+          type="button"
+          severity="secondary"
+          label="Cancel"
+          [outlined]="true"
+          [disabled]="saving()"
+          (click)="closeDialog()"
+        ></button>
+        <button pButton type="submit" label="Save" icon="pi pi-check" [loading]="saving()"></button>
+      </div>
+    </form>
+  </p-dialog>
+</section>

@@ -1,7 +1,5 @@
 import { Routes } from '@angular/router';
 
-import { AuthGuard } from './shared/Guards/auth.guard';
-
 export const routes: Routes = [
     {
         path: 'admin',
